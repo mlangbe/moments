@@ -1,36 +1,8 @@
-========================================================================
-    KONSOLENANWENDUNG: moments-Projektübersicht
-========================================================================
+Source code for the invariant moment calculations.
 
-Diese moments-Anwendung wurde vom Anwendungs-Assistenten
-für Sie erstellt.  
+In File momStats.cpp contains a collection of little programs testing some part of the invaraiants and using it as Object database.
 
-Diese Datei bietet eine Übersicht über den Inhalt der einzelnen Dateien,
-aus denen Ihre moments–Anwendung besteht.
+To use the source include whatever you want your main.cpp
 
 
-moments.vcproj
-    Dies ist die Hauptprojektdatei für VC++-Projekte, die mit dem Anwendungs-
-    Assistenten generiert werden. 
-    Sie enthält Informationen über die Version von Visual C++, mit der die
-    Datei generiert wurde, sowie über die Plattformen, Konfigurationen und 
-    Projektfeatures, die im Anwendungs-Assistenten ausgewählt wurden.
 
-moments.cpp
-    Dies ist die Hauptquelldatei der Anwendung.
-
-/////////////////////////////////////////////////////////////////////////////
-Weitere Standarddateien:
-
-StdAfx.h, StdAfx.cpp
-    Mit diesen Dateien werden eine vorkompilierte Header (PCH)-Datei
-    mit dem Namen "moments.pch" und eine 
-    vorkompilierte Typendatei mit dem Namen "StdAfx.obj" erstellt.
-
-/////////////////////////////////////////////////////////////////////////////
-Weitere Hinweise:
-
-Der Anwendungs-Assistent weist Sie mit "TODO:"-Kommentaren auf Teile des
-Quellcodes hin, die Sie ergänzen oder anpassen sollten.
-
-/////////////////////////////////////////////////////////////////////////////
