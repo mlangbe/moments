@@ -19,7 +19,7 @@
 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef QIAT_H
+#ifndef QUAT_H
 #define QUAT_H
 
 #pragma once
