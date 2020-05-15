@@ -84,11 +84,11 @@ template<int nn>
 template<class Tint>
 int primedb<nn>::test( const Tint& n )
 {
-  int bound; 
+  ulint bound;
   double fbound = ceil(sqrt(float(n)));
-  bound = int(fbound);
+  bound = (ulint)fbound;
   if(bound < fbound )
-    bound = int(~0u>>1);
+    bound = ( ~ ( (ulint)0) ) >>1;
 
   ulint *i;
   for (i = begin();i!=end() & *i < bound ;++i){
@@ -164,11 +164,13 @@ Tint jakobi(Tint a,Tint q)
 
   Tint *pa=&a,*pq=&q,*xch;
 
-  unsigned long ia,iq,m;
+  using ulint=infnum::t1elem;
+  ulint ia,iq,m;
 
-  static const unsigned long 
+  static const ulint
     sh    = sizeof(ia)*8-1,
-    sh1   = 1<<sh;
+    _1_= 1,
+    sh1   = _1_<<sh;
 
   Tint q0=q;	
 
@@ -192,19 +194,19 @@ Tint jakobi(Tint a,Tint q)
 	{ ia=sh1; mydiv(*pa,ia);  }
 
       ia|= sh1;//zur terminierung
-      iq = 1;	
+      iq = _1_;
       m=0;//m=anzahl zweier ungerade?
       while(!(ia&iq))
-	{ m^=1 ; iq<<=1;  }
+	{ m^=_1_ ; iq<<=1;  }
 
       *pa/=iq;
       //. . . . . . . . . . . . . . . .. 
 
       //beitrag zu ltz berechnen
       
-      iq = *pq % 8; 
+      iq = *pq & 7;
       
-      ltz ^= ( (iq*iq-1)>>3 ) & m ;
+      ltz ^= ( (iq*iq- _1_)>>3 ) & m ;
 
       //................................
 
@@ -213,16 +215,16 @@ Tint jakobi(Tint a,Tint q)
 
       //reziprozitaet nutzen      
 
-      ia = *pa % 8;
-      ltz ^= ((ia-1)>>1) & ((iq-1)>>1) & 1 ;
+      ia = *pa & 7;
+      ltz ^= ((ia-_1_)>>1) & ((iq-_1_)>>1) & 1 ;
 
       xch=pa;pa=pq;pq=xch;
 
     }
   
  
-  if( ltz )return  q0-Tint(1);
-  return 1;
+  if( ltz )return  q0-(Tint)_1_;
+  return _1_;
 
 }
 
@@ -238,6 +240,11 @@ Tint powmod(Tint a,Tint exponent,Tint n)
     throw;
   }
 
+  if( ( (n*n) / n ) != n ){
+    std::cerr<<"powmod: overflow of modulus . must have<=1/2 of the bits the number can contain \n"<<n<<std::endl;
+    throw;
+  }
+
 //   if(n>(1LLU<<(sizeof(n)*8/2))){
 //     fprintf(stderr,"powmod: n too big:"
 // 	    " product of numbers will overflow before mod");
@@ -248,7 +255,7 @@ Tint powmod(Tint a,Tint exponent,Tint n)
 
     if(a>=n)a%=n;
 
-    unsigned long odd =2;
+    infnum::t1elem odd =2;
 
     mydiv(exponent,odd);
 
@@ -278,7 +285,7 @@ int W(const Tint& a, const Tint& n)
 {
   static const Tint my1=1;
   if(ggt<Tint>(a,n)!=1)return 0;  
-  return ( powmod<Tint>(a, (n-my1)/2LU, n) == jakobi<Tint>(a,n) ); 
+  return ( powmod<Tint>(a, (n-my1)>>1, n) == jakobi<Tint>(a,n) );
 }
 
 
@@ -324,7 +331,7 @@ int primfaktors(Tint&a,int*f,int nf,int ntries=1000)
     
     if (  a % c == 0 && primzahlen.test(c)==1 ){
       f[nfakts++] = c;
-      do{ a /= (long unsigned)c; } while(a % c == 0 );
+      do{ a /= (ulint)c; } while(a % c == 0 );
     }
 
   }
@@ -374,7 +381,7 @@ int ord(const Tint&n,const Tint&a,const Tint&n1,int*f,int nf)
   int ret=1;
   for(int i=0;i<nf;i++){
     //    cout<<"testing: "<<i<<": a^((n-1)/"<<f[i]<<")==1 (mod n)"<<endl;
-    if(powmod(a,(n-m1)/((unsigned long)f[i]),n)==m1)
+    if(powmod(a,(n-m1)/((infnum::t1elem)f[i]),n)==m1)
       {ret=0;break;}
   }
   
@@ -421,8 +428,8 @@ int prim(Tint n)
 
   Tint a,n1 = n-my1 ;
 
-  //try the first 10000 numbers 
-  int nfakts=primfaktors(n1,primfakts,primzahlen.n,10000);
+  //try the first 1000 numbers
+  int nfakts=primfaktors(n1,primfakts,primzahlen.n,1000);
 
   if( n1!=my1 && prim(n1)!=1 )
       return -1;        

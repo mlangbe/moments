@@ -28,7 +28,7 @@
 
 #include "infnum.hh"
 
-typedef unsigned long ulint;
+typedef infnum::t1elem ulint;
 
 
 struct gencandidate
@@ -66,7 +66,7 @@ struct primedb
 {
   static const ulint n=nn;
   
-  unsigned long p[n];
+  ulint p[n];
     
   inline ulint * end(){ return p+n; }
   inline ulint * begin(){return p; }

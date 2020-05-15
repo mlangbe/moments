@@ -64,6 +64,18 @@ const infnum infnum::zero=0;
 const infnum infnum::one=1;
 const infnum infnum::two=2;
 
+
+
+//out-of class definitions of constants to avoid linker errors
+const int infnum::bits1elem;
+const int infnum::bits2elem;
+const infnum::t1elem infnum::maxt1elem;
+const int infnum::minrecurse;
+
+
+
+
+
 void infnum::operator<<=(tindex i)
 {
   if(!N())return;
@@ -1246,7 +1258,7 @@ void binsum(infnum&zsum,infnum&tsum, //z�hler,nenner des ergebnisses
 	    infnum::t1elem x1,infnum::t1elem x2 //grenzen f�r summe
 	    )
 {
-  if((tp=0)|(zp>tp)|(x2>nn)|(x1>x2))return;
+  if((tp==0)|(zp>tp)|(x2>nn)|(x1>x2))return;
   infnum::t1elem i,zq=tp-zp;
   tsum=npow(infnum(tp),nn);
   infnum pr=npow((infnum)zp,x1);

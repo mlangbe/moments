@@ -31,6 +31,8 @@
 #include<vector>
 #include<cmath>
 #include<cassert>
+#include<cstdint>
+#include<type_traits>
 //#include "modularFFT.hh"
 
 #ifdef showcost
@@ -42,20 +44,45 @@ extern long cost;
 
 class infnum{
 
+  enum{
+	  llu2lu
+	  =
+	  ( sizeof(long long unsigned int) == 2* sizeof(long unsigned int) ),
+	  llu2u
+	  =
+	  ( sizeof(long long unsigned int) == 2* sizeof(unsigned int) ),
+	  llu2su
+	  =
+	  ( sizeof(long long unsigned int) == 2* sizeof(short unsigned int) ),
+  };
+
 public:
 
-  // basic integer type in which the number is stored
-  typedef unsigned long t1elem;
+
+// basic integer type in which the number is stored
+  typedef std::conditional< llu2su,
+		  	  short unsigned int,
+			  std::conditional< llu2u,
+			  	  unsigned int,
+		  	  	  std::conditional< llu2lu,
+		  	  	  	  long unsigned int,
+		  	  	  	  std::uint_least32_t
+		  	  	  	  >::type
+				  >::type
+		  >::type t1elem;
   // integer type with double as many bits;
   //used for multiplication of two t1elems 
-  typedef unsigned long long t2elem;
+  typedef std::conditional<llu2lu|llu2u|llu2su, long long unsigned int, std::uint_least64_t >::type t2elem;
   //integer type for indexing,shifting ...
   typedef int tindex;
 
 
   static const int bits1elem = sizeof(t1elem)*8;
   static const int bits2elem = sizeof(t2elem)*8;
-  static const t1elem maxt1elem = t1elem(-1);
+
+  static_assert(2*bits1elem==bits2elem,"t2elem should be an unsigned integer type which is twice as large as t1elem");
+
+  static const t1elem maxt1elem = ~t1elem(0);
 
 #ifdef __sparc
   //float type to which infnum should be convertible;
